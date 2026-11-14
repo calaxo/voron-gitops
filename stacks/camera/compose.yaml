@@ -1,0 +1,32 @@
+# =============================================================================
+# Stack « camera » — SQUELETTE, DÉSACTIVÉ (profil "todo" : rien ne démarre par défaut)
+# =============================================================================
+# TODO(camera) :
+#   1. Brancher la caméra, repérer son chemin stable : ls -l /dev/v4l/by-id/
+#      (ce chemin contient le n° de série de la caméra → le mettre dans .env, pas ici).
+#   2. Renseigner CAMERA_DEVICE dans l'environnement Komodo du stack.
+#   3. Retirer "profiles", figer le tag (+ digest) de l'image.
+#   4. Ajouter [webcam ...] dans config/moonraker/moonraker.conf et la route /webcam/
+#      dans stacks/klipper/nginx.conf (ou exposer le port directement sur le LAN).
+# ustreamer = ce que crowsnest lance en interne ; prind en publie une image.
+# =============================================================================
+
+name: camera
+
+services:
+  ustreamer:
+    image: mkuf/ustreamer:v6.67-5-g11fd828
+    profiles: ["todo"]
+    restart: unless-stopped
+    command:
+      - --host=0.0.0.0
+      - --port=8080
+      - --slowdown
+      - --device=/dev/webcam
+      - --resolution=1280x720
+      - --format=MJPEG
+      - --desired-fps=30
+    devices:
+      - ${CAMERA_DEVICE:-/dev/video0}:/dev/webcam
+    ports:
+      - "${CAMERA_BIND:-0.0.0.0}:${CAMERA_PORT:-8080}:8080"

@@ -1,0 +1,15 @@
+# /etc/systemd/system/cpu-governor-performance.service
+# Gouverneur CPU « performance » sur tous les cœurs : latence d'ordonnancement
+# régulière pour klippy (plus utile qu'un noyau PREEMPT_RT pour Klipper, dont le
+# temps réel est géré par les MCU). Coût : quelques watts sur un i5-12400.
+[Unit]
+Description=CPU governor performance (Klipper host)
+After=multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'for f in /sys/devices/system/cpu/cpufreq/policy*/scaling_governor; do echo performance > "$f"; done'
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,61 @@
+# =============================================================================
+# Komodo — Resource Sync (MODÈLE). Copier/adapter dans le dépôt de sync Komodo,
+# ou pointer un Resource Sync sur ce fichier une fois les CHANGE_ME remplacés
+# (dans ce cas, garder la version remplie hors du dépôt public).
+# =============================================================================
+#
+# SÉCURITÉ : pas de déploiement automatique (webhook / poll / auto_update).
+# Un redéploiement redémarre klippy → une impression en cours serait PERDUE.
+# On déploie à la main, imprimante au repos.
+
+[[stack]]
+name = "voron-klipper"
+description = "Klipper + Moonraker + Mainsail (prind) — Voron 2.4"
+tags = ["printer"]
+
+[stack.config]
+server = "CHANGE_ME_SERVER_NAME"            # nom du serveur Periphery dans Komodo
+git_provider = "github.com"
+# git_account = "CHANGE_ME"                 # inutile si le dépôt est public
+repo = "CHANGE_ME_OWNER/voron-gitops"
+branch = "main"
+run_directory = "stacks/klipper"
+file_paths = ["compose.yaml"]
+webhook_enabled = false
+poll_for_updates = false
+auto_update = false
+links = ["http://printer.local"]
+# Écrit dans .env à côté du compose (aucun secret ici).
+environment = """
+TZ=Etc/UTC
+MAINSAIL_PORT=80
+MAINSAIL_BIND=0.0.0.0
+LOCAL_CONFIG_DIR=/etc/voron-gitops/klipper-local
+"""
+
+# Fichiers de config suivis par Komodo (affichage / diff dans l'UI). Chemins relatifs
+# au run_directory — À VÉRIFIER selon la version de Komodo.
+[[stack.config.config_files]]
+path = "nginx.conf"
+requires = "Redeploy"
+
+# --- Squelettes désactivés (profil "todo" dans les compose) -------------------
+# [[stack]]
+# name = "voron-camera"
+# [stack.config]
+# server = "CHANGE_ME_SERVER_NAME"
+# repo = "CHANGE_ME_OWNER/voron-gitops"
+# run_directory = "stacks/camera"
+# file_paths = ["compose.yaml"]
+# environment = """
+# CAMERA_DEVICE=/dev/v4l/by-id/CHANGE_ME-video-index0
+# CAMERA_PORT=8080
+# """
+#
+# [[stack]]
+# name = "voron-obico"
+# [stack.config]
+# server = "CHANGE_ME_SERVER_NAME"
+# repo = "CHANGE_ME_OWNER/voron-gitops"
+# run_directory = "stacks/obico"
+# file_paths = ["compose.yaml"]

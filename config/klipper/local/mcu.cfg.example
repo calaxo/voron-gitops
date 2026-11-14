@@ -1,0 +1,20 @@
+# Modèle des valeurs propres à la machine. Sur l'hôte, copier en
+#   ${LOCAL_CONFIG_DIR:-/etc/voron-gitops/klipper-local}/mcu.cfg   (lisible par l'uid 1000)
+# ce dossier est monté sur config/klipper/local/ dans le conteneur Klipper
+# (hors du clone git → survit aux re-clones Komodo).
+# Pour un essai hors Komodo, config/klipper/local/mcu.cfg marche aussi (gitignoré).
+# Puis remplacer les UUID.
+# Obtenir les UUID sur l'hôte (Klipper arrêté, can0 UP) :
+#   docker run --rm --network host --entrypoint /opt/venv/bin/python \
+#     mkuf/klipper:<KLIPPER_TAG> klipper/scripts/canbus_query.py can0
+# (ou ~/katapult/scripts/flashtool.py -i can0 -q si Katapult est installé)
+#
+# Ne JAMAIS committer ce fichier une fois rempli : le dépôt est public.
+
+[mcu]
+# Octopus Pro H723 en pont USB-CAN
+canbus_uuid: CHANGE_ME_OCTOPUS   # 12 caractères hexadécimaux
+
+[mcu ebb]
+# EBB SB2209 CAN (Katapult + Klipper CAN)
+canbus_uuid: CHANGE_ME_EBB       # 12 caractères hexadécimaux

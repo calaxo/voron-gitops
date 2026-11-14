@@ -1,0 +1,11 @@
+# /etc/systemd/network/80-can0.network
+# Bus CAN de l'imprimante : Octopus Pro H723 en pont USB-CAN (gs_usb) → interface can0.
+# 1 Mbit/s : doit correspondre au firmware Klipper/Katapult des MCU (Octopus + EBB).
+# Nécessite systemd-networkd actif (défaut d'Ubuntu Server ; netplan ne gère pas can0).
+[Match]
+Name=can0
+
+[CAN]
+BitRate=1M
+# Redémarrage automatique du contrôleur après un bus-off.
+RestartSec=100ms

@@ -1,0 +1,9 @@
+# /etc/systemd/network/10-can-gs_usb.link
+# Appliqué par udev à l'apparition de l'interface (pont USB-CAN, pilote gs_usb).
+# txqueuelen 128 (défaut 10) : évite les « No buffer space available » de Klipper.
+# Le nom 10-* passe avant 99-default.link. Pas de renommage : l'interface reste can0.
+[Match]
+Driver=gs_usb
+
+[Link]
+TxQueueLength=128

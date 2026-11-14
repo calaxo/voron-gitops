@@ -1,0 +1,63 @@
+#cloud-config
+# =============================================================================
+# Ubuntu Server 24.04 LTS — autoinstall (MODÈLE, valeurs neutres)
+# Copier hors du dépôt, remplacer tous les CHANGE_ME, puis placer sur la clé USB
+# (dossier nocloud : user-data + meta-data vide) — voir host/README.md.
+# Ne jamais committer la version remplie (hash de mot de passe, clés SSH).
+# =============================================================================
+autoinstall:
+  version: 1
+  locale: fr_FR.UTF-8
+  keyboard:
+    layout: fr
+  timezone: Etc/UTC          # CHANGE_ME (ex. Europe/<ville>)
+  refresh-installer:
+    update: true
+
+  identity:
+    hostname: printer        # neutre ; résolu en printer.local via mDNS si avahi
+    username: CHANGE_ME
+    # mkpasswd -m sha-512   (paquet whois)
+    password: "CHANGE_ME_SHA512_HASH"
+
+  ssh:
+    install-server: true
+    allow-pw: false
+    authorized-keys:
+      - "ssh-ed25519 CHANGE_ME_PUBLIC_KEY"
+
+  network:
+    version: 2
+    ethernets:
+      lan:
+        match:
+          name: "en*"
+        dhcp4: true          # IP fixe : réservation DHCP côté routeur (recommandé)
+
+  storage:
+    layout:
+      name: lvm
+      sizing-policy: all
+
+  packages:
+    - avahi-daemon
+    - can-utils
+    - curl
+    - git
+    - jq
+    - python3
+    - linux-tools-common
+
+  kernel:
+    flavor: generic          # PAS de PREEMPT_RT : inutile pour Klipper (cf. README)
+
+  late-commands:
+    # Pas d'autosuspend USB (pont USB-CAN de l'Octopus).
+    - curtin in-target -- sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 usbcore.autosuspend=-1"/' /etc/default/grub
+    - curtin in-target -- update-grub
+    # Mini-PC = serveur : jamais de mise en veille.
+    - curtin in-target -- systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+    - curtin in-target -- systemctl enable systemd-networkd
+
+  # Docker, Komodo Periphery et les fichiers de host/ : voir host/README.md
+  # (bootstrap après le premier démarrage, ou à ajouter ici en late-commands).

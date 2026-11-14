@@ -1,0 +1,46 @@
+# --- Valeurs propres à la machine / secrets (dépôt PUBLIC) ---
+config/klipper/local/*
+!config/klipper/local/mcu.cfg.example
+/local/
+*.env
+.env
+!.env.example
+*.secret
+*secret*
+!**/*secret*.example
+*.key
+*.pem
+periphery.config.toml
+user-data
+!host/autoinstall/user-data.example
+moonraker.secrets
+moonraker-obico.cfg
+resources.toml
+
+# --- Données d'exécution ---
+*.log
+*.log.*
+klippy*.log
+moonraker*.log
+logs/
+*.gcode
+*.bgcode
+gcodes/
+
+# --- Calibration brute ---
+*.csv
+resonances_*.csv
+calibration_data_*.csv
+raw_data*.csv
+*.png.tmp
+
+# --- SAVE_CONFIG / sauvegardes Klipper ---
+printer-*.cfg
+*.bkp
+
+# --- Divers ---
+.DS_Store
+Thumbs.db
+__pycache__/
+.vscode/
+.idea/

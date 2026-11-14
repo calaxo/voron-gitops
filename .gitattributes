@@ -1,0 +1,4 @@
+# Fins de ligne LF partout (fichiers lus sous Linux : cfg, systemd, sh, yaml).
+* text=auto eol=lf
+*.png binary
+*.jpg binary

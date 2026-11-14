@@ -1,0 +1,41 @@
+# =============================================================================
+# Stack « obico » — SQUELETTE, DÉSACTIVÉ (profil "todo")
+# =============================================================================
+# Deux morceaux distincts :
+#   a) le SERVEUR Obico auto-hébergé (détection d'échec par IA) : projet
+#      github.com/TheSpaghettiDetective/obico-server — plusieurs services (web, tasks,
+#      ml_api, redis), construits depuis les sources. ml_api tourne sur CPU (i5-12400 OK),
+#      GPU optionnel. Peut vivre sur cet hôte ou ailleurs sur le LAN.
+#   b) le CLIENT moonraker-obico, à côté de Moonraker : il pousse les images caméra
+#      au serveur et reçoit les ordres de pause.
+#
+# TODO(obico) :
+#   1. Stack caméra opérationnel (stacks/camera).
+#   2. Déployer obico-server (stack Komodo séparé, ou section a) ci-dessous à compléter).
+#   3. Créer config/moonraker-obico/moonraker-obico.cfg.example (server_url =
+#      http://obico.example:3334, moonraker host/port, webcam) — l'auth_token
+#      obtenu au « link » ne va JAMAIS dans git (fichier local / variable).
+#   4. Retirer "profiles", figer les tags.
+# =============================================================================
+
+name: obico
+
+services:
+  moonraker-obico:
+    image: ghcr.io/thespaghettidetective/moonraker-obico:latest   # TODO : figer un tag
+    profiles: ["todo"]
+    restart: unless-stopped
+    # Moonraker n'est pas publié sur l'hôte : joindre le réseau du stack klipper
+    # (nom "klipper_default") ou publier 7125 en local. À trancher.
+    networks: [klipper]
+    volumes:
+      - ${OBICO_CONFIG_DIR:-/etc/voron-gitops/obico}:/opt/printer_data/config
+      - obico-logs:/opt/printer_data/logs
+
+networks:
+  klipper:
+    name: klipper_default
+    external: true
+
+volumes:
+  obico-logs:
