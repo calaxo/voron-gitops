@@ -92,8 +92,10 @@ install -m 0644 "$HERE/ssh/50-durcissement.conf" /etc/ssh/sshd_config.d/
 sshd -t && systemctl reload ssh
 
 echo "==> Chien de garde matériel"
-install -m 0644 "$HERE/modules/watchdog.conf" /etc/modules-load.d/watchdog.conf
-modprobe iTCO_wdt 2>/dev/null || true
+rm -f /etc/modules-load.d/watchdog.conf
+install -m 0644 "$HERE/systemd/watchdog-itco.service" /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable --now watchdog-itco.service
 install -d /etc/systemd/system.conf.d
 install -m 0644 "$HERE/systemd/50-watchdog.conf" /etc/systemd/system.conf.d/
 systemctl daemon-reexec

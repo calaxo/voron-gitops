@@ -1,0 +1,17 @@
+# /etc/systemd/system/watchdog-itco.service — installé par host/hardening/harden.sh
+# Charge le watchdog matériel du chipset Intel (PCH TCO). Ubuntu le met en liste
+# noire et systemd-modules-load refuse donc de le charger (« deny-listed by kmod ») ;
+# un modprobe explicite passe outre. systemd (50-watchdog.conf) l'ouvre ensuite.
+[Unit]
+Description=Charge le watchdog materiel iTCO_wdt
+DefaultDependencies=no
+After=systemd-modules-load.service
+Before=sysinit.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/modprobe iTCO_wdt
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target
