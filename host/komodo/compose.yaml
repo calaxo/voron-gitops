@@ -12,7 +12,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc:/proc
-      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+      # Racine de l'agent, MÊME chemin dedans et dehors (Docker résout les bind
+      # mounts des stacks sur l'HÔTE). Chemin écrit en dur : PERIPHERY_ROOT_DIRECTORY
+      # vit dans compose.env, qui va au conteneur mais n'interpole PAS ce fichier
+      # (l'ancienne ligne ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo} montait /etc/komodo :
+      # clones invisibles pour l'hôte, « read-only file system » au démarrage).
+      - /srv/komodo:/srv/komodo
       - keys:/config/keys
 
 volumes:
