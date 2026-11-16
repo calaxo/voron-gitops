@@ -1,0 +1,19 @@
+{
+    "from": "User",
+    "inherits": "Voron 2.4 350 0.4 nozzle",
+    "name": "Voron 2.4 350",
+    "print_host": "http://printer.local",
+    "print_host_webui": "http://printer.local",
+    "printer_extruder_id": [
+        "1"
+    ],
+    "printer_extruder_variant": [
+        "Direct Drive Standard"
+    ],
+    "printer_settings_id": "Voron 2.4 350",
+    "version": "2.4.0.3",
+    "machine_start_gcode": "; Voron 2.4 350 (voron-gitops) : PRINT_START fait chauffe + purge.\n; Z doit etre pose avant (SET_Z_MANUAL Z=0.1 au papier) tant qu'il n'y a pas d'OptoTap.\nPRINT_START BED=[bed_temperature_initial_layer_single] EXTRUDER=[nozzle_temperature_initial_layer] CHAMBER=[chamber_temperature]",
+    "machine_end_gcode": "PRINT_END",
+    "thumbnails": "32x32/PNG,300x300/PNG",
+    "use_relative_e_distances": "1"
+}

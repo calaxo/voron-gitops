@@ -1,0 +1,73 @@
+{
+    "name": "eSUN PLA+ noir @Voron 2.4",
+    "from": "User",
+    "is_custom_defined": "0",
+    "version": "2.5.1.0",
+    "inherits": "Generic PLA @System",
+    "filament_settings_id": [
+        "eSUN PLA+ noir @Voron 2.4"
+    ],
+    "filament_vendor": [
+        "eSUN"
+    ],
+    "default_filament_colour": [
+        "#000000"
+    ],
+    "nozzle_temperature": [
+        "215"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "215"
+    ],
+    "hot_plate_temp": [
+        "60"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "60"
+    ],
+    "textured_plate_temp": [
+        "60"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "60"
+    ],
+    "fan_min_speed": [
+        "100"
+    ],
+    "fan_max_speed": [
+        "100"
+    ],
+    "close_fan_the_first_x_layers": [
+        "1"
+    ],
+    "full_fan_speed_layer": [
+        "3"
+    ],
+    "slow_down_layer_time": [
+        "5"
+    ],
+    "slow_down_min_speed": [
+        "10"
+    ],
+    "filament_flow_ratio": [
+        "1"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "pressure_advance": [
+        "0.04"
+    ],
+    "filament_retraction_length": [
+        "0.8"
+    ],
+    "filament_retraction_speed": [
+        "35"
+    ],
+    "filament_z_hop": [
+        "0.4"
+    ],
+    "filament_notes": [
+        "Valide Benchy 13/11 (banc). PA 0,040 mesure. Z-hop monte de 0,2 a 0,4 (decalages au-dessus des ponts). Debit, tour de temperature, retraction : a calibrer."
+    ]
+}
