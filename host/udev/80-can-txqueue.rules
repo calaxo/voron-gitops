@@ -1,0 +1,5 @@
+# /etc/udev/rules.d/80-can-txqueue.rules — installé par host/bootstrap.sh
+# txqueuelen 128 (défaut 10) sur toute interface CAN : évite les « No buffer space
+# available » de Klipper. Remplace 10-can-gs_usb.link, que systemd n applique pas
+# aux interfaces CAN (constaté sur Ubuntu 24.04, la file restait à 10).
+ACTION=="add", SUBSYSTEM=="net", KERNEL=="can*", ATTR{tx_queue_len}="128"

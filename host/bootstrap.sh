@@ -12,7 +12,9 @@ LOCAL_CONFIG_DIR="${LOCAL_CONFIG_DIR:-/etc/voron-gitops/klipper-local}"
 [ "$(id -u)" -eq 0 ] || { echo "À lancer en root (sudo)." >&2; exit 1; }
 
 echo "==> CAN (systemd-networkd)"
-install -m 0644 "$HERE/systemd/network/10-can-gs_usb.link" /etc/systemd/network/
+rm -f /etc/systemd/network/10-can-gs_usb.link
+install -m 0644 "$HERE/udev/80-can-txqueue.rules" /etc/udev/rules.d/
+udevadm control --reload
 install -m 0644 "$HERE/systemd/network/80-can0.network"   /etc/systemd/network/
 systemctl enable --now systemd-networkd
 # Applique le .link à une interface déjà présente (sinon : débrancher/rebrancher l'USB).

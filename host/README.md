@@ -24,7 +24,7 @@ Le script installe (idempotent) :
 
 | Fichier | Destination | Rôle |
 |---|---|---|
-| `systemd/network/10-can-gs_usb.link` | `/etc/systemd/network/` | `TxQueueLength=128` sur toute interface du pilote `gs_usb` |
+| `udev/80-can-txqueue.rules` | `/etc/udev/rules.d/` | `tx_queue_len=128` sur toute interface CAN |
 | `systemd/network/80-can0.network` | `/etc/systemd/network/` | `can0` UP à `BitRate=1M` |
 | `systemd/system/cpu-governor-performance.service` | `/etc/systemd/system/` | gouverneur `performance` |
 | `sysctl/90-klipper-host.conf` | `/etc/sysctl.d/` | `vm.swappiness=10` |
