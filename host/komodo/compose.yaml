@@ -1,0 +1,19 @@
+# Komodo Periphery (agent) en conteneur — à poser dans /srv/komodo/ sur l hôte.
+# Lancer : cd /srv/komodo && docker compose -p komodo up -d
+services:
+  periphery:
+    image: ghcr.io/moghtech/komodo-periphery:2.3.3@sha256:fa3f1a641a265216066676950d5eecdf506955a7bafe2f01996135ae93115cd5
+    labels:
+      komodo.skip: # Prevent Komodo from stopping with StopAllContainers
+    restart: unless-stopped
+    env_file: ./compose.env
+    ports:
+      - 8120:8120
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+      - keys:/config/keys
+
+volumes:
+  keys:

@@ -35,6 +35,20 @@ if [ ! -f "$LOCAL_CONFIG_DIR/mcu.cfg" ]; then
   echo "   -> $LOCAL_CONFIG_DIR/mcu.cfg créé depuis le modèle : RENSEIGNER LES UUID."
 fi
 
+echo "==> Durcissement (mises à jour auto, télémétrie, paquets inutiles, watchdog…)"
+"$HERE/hardening/harden.sh"
+
+echo "==> Komodo Periphery (conteneur, /srv/komodo)"
+install -d -m 0755 /srv/komodo
+install -m 0644 "$HERE/komodo/compose.yaml" /srv/komodo/compose.yaml
+if [ ! -f /srv/komodo/compose.env ]; then
+  install -m 0600 "$HERE/komodo/compose.env.example" /srv/komodo/compose.env
+  echo "   -> /srv/komodo/compose.env créé : RENSEIGNER PERIPHERY_PASSKEYS et PERIPHERY_ALLOWED_IPS,"
+  echo "      puis : cd /srv/komodo && docker compose -p komodo up -d"
+elif command -v docker >/dev/null && ! grep -q '^PERIPHERY_PASSKEYS=CHANGE_ME' /srv/komodo/compose.env; then
+  (cd /srv/komodo && docker compose -p komodo up -d)
+fi
+
 echo "==> Vérifications"
 ip -details link show can0 2>/dev/null | grep -E "qlen|bitrate" || echo "   can0 absent (Octopus branchée ?)"
 cat /sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null || true

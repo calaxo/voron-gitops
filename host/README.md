@@ -67,15 +67,57 @@ Recommandé : rotation des logs par défaut dans `/etc/docker/daemon.json`
 
 ## 4. Komodo Periphery
 
-L'instance Komodo Core existe déjà ; il suffit d'installer l'agent sur l'hôte :
+Agent en **conteneur** (même modèle que les autres hôtes) : [`komodo/compose.yaml`](komodo/compose.yaml),
+image épinglée par digest, racine `/srv/komodo`. `bootstrap.sh` pose les fichiers ; le secret
+reste hors dépôt :
 
 ```sh
-# Script officiel (vérifier la commande dans la doc de la version de Komodo utilisée)
-curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | sudo python3
+sudo nano /srv/komodo/compose.env     # PERIPHERY_PASSKEYS = KOMODO_PASSKEY du Core, ALLOWED_IPS = IP du Core
+cd /srv/komodo && sudo docker compose -p komodo up -d
 ```
 
-- Configuration : modèle [`komodo/periphery.config.toml.example`](komodo/periphery.config.toml.example)
-  → `/etc/komodo/periphery.config.toml` ; `passkeys` = secret de Komodo Core
-  (**jamais dans git**), `allowed_ips` = IP de Komodo Core.
-- `sudo systemctl enable --now periphery`, puis déclarer le serveur dans Komodo Core.
-- Les stacks sont ensuite décrits dans [`../komodo/`](../komodo/).
+Puis déclarer le serveur dans Komodo Core : adresse `https://<IP de l'hôte>:8120`,
+*Insecure TLS* coché (certificat auto-signé), **Auto Prune décoché**.
+
+## 5. Durcissement — [`hardening/harden.sh`](hardening/harden.sh)
+
+Lancé par `bootstrap.sh` (idempotent, relançable seul). Règle : **rien ne doit pouvoir
+redémarrer klippy ou la machine pendant une impression**, et **rien ne parle à l'extérieur
+sans qu'on le demande**.
+
+| Mesure | Pourquoi |
+|---|---|
+| purge `unattended-upgrades`, `needrestart` + `apt/99-pas-de-maj-auto` + timers `apt-daily*` masqués | une montée de containerd/Docker/noyau en pleine impression = conteneurs ou machine redémarrés |
+| `apt-mark hold` des paquets Docker | pas de montée Docker par un `apt upgrade` distrait |
+| Docker `live-restore` | si dockerd redémarre quand même, les conteneurs continuent |
+| purge `snapd` (+ pin -10) | rafraîchissements automatiques, store Canonical |
+| purge `apport`, `landscape-common`, `fwupd`, `popularity-contest`, `ubuntu-report`, `whoopsie` ; motd-news, annonces Pro (`apt_news`), hook ESM et `ua-timer` coupés | télémétrie / appels sortants Canonical, LVFS |
+| purge `modemmanager`, `multipath-tools`, `open-iscsi`, `udisks2`, `packagekit`, `lxd-installer`, `byobu` | inutiles sur ce mini-PC |
+| cloud-init désactivé | n'a servi qu'à l'installation |
+| veille masquée, `usbcore.autosuspend=-1`, `pcie_aspm=off` (noyau) | coupures USB-CAN / carte réseau |
+| watchdog matériel 60 s (`systemd/50-watchdog.conf`), `kernel.panic = 10` | redémarrage seul si l'hôte se fige (personne à côté) |
+| journald persistant borné à 500 Mo | diagnostic après plantage sans remplir le disque |
+| SSH : clés uniquement, root interdit | accès admin = utilisateur + sudo |
+
+Restent volontairement : `avahi-daemon` (`printer.local`), `smartmontools`, `thermald`,
+`systemd-timesyncd` (heure), `sysstat` (local). Pas d'`ufw` : Docker contourne ses règles pour
+les ports publiés ; le filtrage est fait par nginx (plages privées) et Periphery (`ALLOWED_IPS`).
+
+## 6. Mises à jour (à la main, imprimante au repos)
+
+```sh
+sudo apt update && apt list --upgradable
+sudo apt-mark unhold docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt full-upgrade
+sudo ./host/hardening/harden.sh        # remet les hold et purge ce qu'une dépendance aurait réinstallé
+sudo reboot                            # si noyau / libc
+```
+
+Images des stacks : changer le tag + digest dans le dépôt, puis *Deploy* dans Komodo.
+
+## 7. Tout recréer
+
+1. Clé d'autoinstall (§ 1) → Ubuntu + Docker.
+2. `git clone` du dépôt, `sudo ./host/bootstrap.sh`.
+3. Remplir `/srv/komodo/compose.env` (passkey) et `/etc/voron-gitops/klipper-local/mcu.cfg` (UUID CAN).
+4. Komodo : déclarer le serveur, *Deploy* du stack klipper.
