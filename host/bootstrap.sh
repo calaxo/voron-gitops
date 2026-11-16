@@ -36,7 +36,7 @@ if [ ! -f "$LOCAL_CONFIG_DIR/mcu.cfg" ]; then
 fi
 
 echo "==> Durcissement (mises à jour auto, télémétrie, paquets inutiles, watchdog…)"
-"$HERE/hardening/harden.sh"
+bash "$HERE/hardening/harden.sh"
 
 echo "==> Komodo Periphery (conteneur, /srv/komodo)"
 install -d -m 0755 /srv/komodo
