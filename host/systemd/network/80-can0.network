@@ -7,5 +7,6 @@ Name=can0
 
 [CAN]
 BitRate=1M
-# Redémarrage automatique du contrôleur après un bus-off.
-RestartSec=100ms
+# PAS de RestartSec : le pilote gs_usb (pont USB-CAN Klipper) ne gère pas le
+# redémarrage après bus-off, networkd échoue alors sur TOUTE la config de can0
+# (« Device doesn't support restart from Bus Off »).
