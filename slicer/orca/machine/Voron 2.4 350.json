@@ -13,7 +13,35 @@
     "printer_settings_id": "Voron 2.4 350",
     "version": "2.4.0.3",
     "machine_start_gcode": "; Voron 2.4 350 (voron-gitops) : PRINT_START fait chauffe + purge.\n; Z doit etre pose avant (SET_Z_MANUAL Z=0.1 au papier) tant qu'il n'y a pas d'OptoTap.\nPRINT_START BED=[bed_temperature_initial_layer_single] EXTRUDER=[nozzle_temperature_initial_layer] CHAMBER=[chamber_temperature]",
-    "machine_end_gcode": "PRINT_END",
+    "machine_end_gcode": "PRINT_END\n; retour aux limites de printer.cfg (le profil rapide monte a 6000 mm/s2)\nSET_VELOCITY_LIMIT VELOCITY=300 ACCEL=2000",
     "thumbnails": "32x32/PNG,300x300/PNG",
-    "use_relative_e_distances": "1"
+    "use_relative_e_distances": "1",
+    "machine_max_acceleration_x": [
+        "6000",
+        "6000"
+    ],
+    "machine_max_acceleration_y": [
+        "6000",
+        "6000"
+    ],
+    "machine_max_acceleration_extruding": [
+        "6000",
+        "6000"
+    ],
+    "machine_max_acceleration_retracting": [
+        "6000",
+        "6000"
+    ],
+    "machine_max_acceleration_travel": [
+        "6000",
+        "6000"
+    ],
+    "machine_max_speed_x": [
+        "300",
+        "300"
+    ],
+    "machine_max_speed_y": [
+        "300",
+        "300"
+    ]
 }

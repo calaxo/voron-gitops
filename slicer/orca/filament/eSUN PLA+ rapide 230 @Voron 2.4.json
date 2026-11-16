@@ -1,0 +1,79 @@
+{
+    "name": "eSUN PLA+ rapide 230 @Voron 2.4",
+    "from": "User",
+    "is_custom_defined": "0",
+    "version": "2.5.1.0",
+    "inherits": "Generic PLA @System",
+    "filament_settings_id": [
+        "eSUN PLA+ rapide 230 @Voron 2.4"
+    ],
+    "filament_vendor": [
+        "eSUN"
+    ],
+    "default_filament_colour": [
+        "#000000"
+    ],
+    "nozzle_temperature": [
+        "230"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "225"
+    ],
+    "hot_plate_temp": [
+        "60"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "60"
+    ],
+    "textured_plate_temp": [
+        "60"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "60"
+    ],
+    "fan_min_speed": [
+        "100"
+    ],
+    "fan_max_speed": [
+        "100"
+    ],
+    "close_fan_the_first_x_layers": [
+        "1"
+    ],
+    "full_fan_speed_layer": [
+        "2"
+    ],
+    "slow_down_layer_time": [
+        "2"
+    ],
+    "slow_down_min_speed": [
+        "10"
+    ],
+    "filament_flow_ratio": [
+        "1"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "pressure_advance": [
+        "0.04"
+    ],
+    "filament_retraction_length": [
+        "0.8"
+    ],
+    "filament_retraction_speed": [
+        "35"
+    ],
+    "filament_z_hop": [
+        "0.2"
+    ],
+    "filament_retract_before_wipe": [
+        "0%"
+    ],
+    "filament_max_volumetric_speed": [
+        "28"
+    ],
+    "filament_notes": [
+        "Reglages du cube 300 mm/s du 14/11 (PrusaSlicer, banc) : OK 20,03 x 20,30, 15 min 54. Debit max ~27 mm3/s (300 mm/s x 0,45 x 0,2)."
+    ]
+}
